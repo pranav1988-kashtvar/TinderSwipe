@@ -11,6 +11,9 @@ class ViewController: UIViewController {
 
     // MARK: Properties
     var numberOfCards = 5
+    var cardOffScreenAfterPoint: CGFloat = 80
+    var cardRotationAngle: CGFloat = 15
+    
     var cards: [SingleCard] = []
     var cardViewModel: CardData!
     var lastIndexOfCardsOnScreen: Int = 0
@@ -100,7 +103,7 @@ extension ViewController: PanGestureDelegate {
         if panGesture.state == .ended {
             
             // CARD MAKE OFF TO SCREEN IF CARD CENTER REACH AT 80 POINT IN X AXIOS TO LEFT SIDE
-            if card.center.x < 80 {
+            if card.center.x <  cardOffScreenAfterPoint{
                 
                 UIView.animate(withDuration: 0.3) {
                     card.center = CGPoint(x: card.center.x - self.view.frame.width, y: card.center.y)
@@ -109,7 +112,7 @@ extension ViewController: PanGestureDelegate {
                 }
                 
                 return
-            }else if card.center.x > (view.bounds.size.width - 80) {
+            }else if card.center.x > (view.bounds.size.width - cardOffScreenAfterPoint) {
                 UIView.animate(withDuration: 0.3) {
                     card.center = CGPoint(x: card.center.x + self.view.frame.width, y: card.center.y)
                 } completion: { val in
@@ -129,7 +132,7 @@ extension ViewController: PanGestureDelegate {
     func rotateAndScaleCard(card: SingleCard, xValue: Double) {
         let scaleFactor = 1 - getDeviationPercentage(xValue: abs(xValue)) * 0.2
         let scaleTransform = CGAffineTransform(scaleX: scaleFactor, y: scaleFactor)
-        let radian = getDeviationPercentage(xValue: xValue) * 15 * CGFloat.pi/180
+        let radian = getDeviationPercentage(xValue: xValue) * cardRotationAngle * CGFloat.pi/180
         card.transform = scaleTransform.rotated(by: radian)
     }
     
